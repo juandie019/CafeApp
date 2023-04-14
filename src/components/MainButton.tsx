@@ -1,15 +1,19 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { gstyles } from '../theme/globalStyles';
 
 interface Props {
     title: string,
-    onPress?: () => void;
+    style ?: StyleProp<ViewStyle>
+    onPress: () => void;
 }
 
-export const MainButton = ({ title, onPress }: Props) => {
+export const MainButton = ({ title, style, onPress }: Props) => {
   return (
-    <View style={ styles.buttonContainer }>
+    <View style={{
+      ...styles.buttonContainer,
+      ...style as any,
+    }}>
         <TouchableOpacity
           activeOpacity={ 0.8 }
           style={ styles.button }

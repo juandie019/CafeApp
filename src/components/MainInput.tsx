@@ -9,21 +9,25 @@ interface Props {
     placeholder?: string,
     keyboardType?: KeyboardTypeOptions,
     autoCapitalize?: AutoCapitalize,
-    onInput: (value: string ) => void;
+    onInput: (value: string, prop?: string ) => void;
+    onEnter?: () => void;
     autoCorrect?: boolean,
+    secureTextEntry?: boolean
 }
 
-export const MainInput = ({ value = '' , label, placeholder = '', onInput, keyboardType = 'default' , autoCapitalize = 'none', autoCorrect = false }: Props) => {
+export const MainInput = ({ value = '' , label, placeholder = '', onInput, onEnter, keyboardType = 'default' , autoCapitalize = 'none', autoCorrect = false, secureTextEntry = false }: Props) => {
   return (
     <View>
-        { ( label ) && <Text style={ styles.label }>Email</Text> }
+        { ( label ) && <Text style={ styles.label }>{ label }</Text> }
         <TextInput
             value={ value }
             placeholder={ placeholder }
             onChangeText={ (newValue) => onInput(newValue)}
+            onSubmitEditing={ (onEnter) && (() => onEnter())}
             keyboardType={ keyboardType }
             autoCapitalize={ autoCapitalize }
             autoCorrect={ autoCorrect }
+            secureTextEntry={ secureTextEntry }
             placeholderTextColor="rgba(255,255,255,0.4)"
             underlineColorAndroid="white"
             selectionColor="white"

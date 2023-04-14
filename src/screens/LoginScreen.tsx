@@ -1,15 +1,29 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useForm } from '../hooks/useForm';
+
+import { authStyles } from '../theme/authTheme';
+import { gstyles } from '../theme/globalStyles';
+
 import { Background } from '../components/Background';
 import { MainButton } from '../components/MainButton';
 import { MainInput } from '../components/MainInput';
 import { WhiteLogo } from '../components/WhiteLogo';
-import { authStyles } from '../theme/authTheme';
-import { gstyles } from '../theme/globalStyles';
 
-export const LoginScreen = () => {
+interface Props extends NativeStackScreenProps<any, any>{}
 
-  const [value, setValue] = useState('');
+export const LoginScreen = ({ navigation }: Props) => {
+
+  const { email, password, onChange } = useForm({
+    email: '',
+    password: '',
+  });
+
+  const onLogin = () => {
+    console.log(email, password);
+    Keyboard.dismiss();
+  };
 
   return (
     <>
@@ -28,27 +42,29 @@ export const LoginScreen = () => {
           <Text style={ gstyles.title }>Login</Text>
 
           <MainInput
-            value={ value }
+            value={ email }
             label="Email"
-            onInput={ (newValue) => setValue(newValue)}
+            onInput={ (newValue) => onChange(newValue, 'email')}
             placeholder="Ingrese su correo"
             keyboardType="email-address"
           />
           <MainInput
-            label="Email"
-            onInput={ (newValue) => setValue(newValue)}
+            value={ password }
+            label="Constraseña"
+            onInput={ (newValue) => onChange(newValue, 'password')}
             placeholder="****"
-            keyboardType="visible-password"
+            secureTextEntry
+            onEnter={ onLogin }
           />
           <MainButton
             title="Iniciar Sesión"
-            onPress={ () => console.log('click')}
+            onPress={ onLogin }
           />
 
           <View style={ authStyles.newUserContainer }>
             <TouchableOpacity
               activeOpacity={ 0.8 }
-              onPress={ () => console.log('pres')}
+              onPress={ () => navigation.replace('RegisterScreen')}
             >
               <Text style={ gstyles.buttonText }>Nueva cuenta</Text>
             </TouchableOpacity>

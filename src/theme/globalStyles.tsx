@@ -19,4 +19,10 @@ export const gstyles = StyleSheet.create({
         height: 600,
         marginBottom: 50,
     },
+
+    fab: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+    },
 });
