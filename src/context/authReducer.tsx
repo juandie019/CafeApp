@@ -10,7 +10,7 @@ export interface AuthState {
 type AuthAction =
     | { type: 'signUp', payload: { token: string, user: Usuario } }
     | { type: 'logOut' }
-    | { type: 'removeCredentials' }
+    | { type: 'notAuthenticated' }
     | { type: 'addError', payload: string }
     | { type: 'removeError' }
 
@@ -39,7 +39,7 @@ export const authReducer = ( state: AuthState, action: AuthAction): AuthState =>
                 status: 'authenticated',
             };
 
-        case 'removeCredentials':
+        case 'notAuthenticated':
         case 'logOut':
             return {
                 ...state,
