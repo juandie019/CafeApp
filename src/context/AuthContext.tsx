@@ -42,10 +42,10 @@ export const AuthProvider = ( { children }: any ) => {
         try {
             const response = await cafeApi.get<LoginResponse>('/auth');
             const { token, usuario } = response.data;
-
+            await setToken(token);
             dispatch({ type: 'signUp', payload: { token, user: usuario } });
         } catch (error: any) {
-            setToken('');
+            await setToken('');
             dispatch({ type: 'notAuthenticated' });
         }
     };
@@ -57,17 +57,23 @@ export const AuthProvider = ( { children }: any ) => {
             console.log(error);
         }
     };
+
     const signIn = async ( { correo, password }: LoginData ) => {
         try {
             const response = await cafeApi.post<LoginResponse>('/auth/login', { correo, password } );
             const { token, usuario } = response.data;
-            setToken(token);
+            await setToken(token);
             dispatch({ type: 'signUp', payload: { token, user: usuario } });
         } catch (error: any) {
             dispatch( { type: 'addError', payload: error.response.data.msg || 'Información incorrecta'});
         }
     };
-    const logOut = () => {};
+
+    const logOut = async () => {
+        await setToken('');
+        dispatch({ type: 'logOut' });
+    };
+
     const removeError = () => {
         dispatch({ type: 'removeError' });
     };
