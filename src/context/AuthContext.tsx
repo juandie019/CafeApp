@@ -57,8 +57,7 @@ export const AuthProvider = ( { children }: any ) => {
             await setToken(token);
             dispatch({ type: 'signUp', payload: { token, user: usuario } });
         } catch (error: any) {
-            console.log(error);
-            dispatch( { type: 'addError', payload: error.response.data.msg || 'Información incorrecta'});
+            dispatch( { type: 'addError', payload: error.response.data.errors[0].msg || 'Información incorrecta'});
         }
     };
 
