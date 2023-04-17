@@ -26,7 +26,7 @@ export interface RegisterData {
 }
 
 // Productos
-export interface Productos {
+export interface ProductosResponse {
     total:     number;
     productos: Producto[];
 }
