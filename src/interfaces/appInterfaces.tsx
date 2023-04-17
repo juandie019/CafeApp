@@ -24,3 +24,23 @@ export interface RegisterData {
     password: string,
     nombre: string,
 }
+
+// Productos
+export interface Productos {
+    total:     number;
+    productos: Producto[];
+}
+
+export interface Producto {
+    precio:    number;
+    _id:       string;
+    nombre:    string;
+    categoria: Categoria;
+    usuario:   Categoria;
+    img?:      string;
+}
+
+export interface Categoria {
+    _id:    string;
+    nombre: string;
+}
