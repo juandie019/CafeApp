@@ -40,7 +40,20 @@ export interface Producto {
     img?:      string;
 }
 
+
+export interface CategoriesResponse {
+    total:      number;
+    categorias: Categoria[];
+}
+
 export interface Categoria {
+    _id:      string;
+    nombre:   string;
+    usuario?: Creador;
+}
+
+export interface Creador {
     _id:    string;
     nombre: string;
 }
+

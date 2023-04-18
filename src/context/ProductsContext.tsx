@@ -8,7 +8,7 @@ type ProductsContextProps = {
     addProduct: ( categoryId: string, productName: string) => Promise<void>;
     updateProduct:( categoryId: string, productName: string, productId: string ) => Promise<void>;
     deleteProduct:( productId: string ) => Promise<void>;
-    loadProductById:( productId: string ) => Promise<void>;
+    loadProductById:( productId: string ) => Promise<Producto>;
     uploadImage:( data: any, productId: string ) => Promise<void>; //TODO: cambiar ANY
 }
 
@@ -28,9 +28,11 @@ export const ProductsProvider = ({ children }: any) => {
     };
 
     const addProduct = async ( categoryId: string, productName: string) => {
+        console.log({ categoryId, productName });
     };
 
     const updateProduct = async ( categoryId: string, productName: string, productId: string ) => {
+        console.log({ categoryId, productName, productId });
 
     };
 
@@ -38,8 +40,9 @@ export const ProductsProvider = ({ children }: any) => {
 
     };
 
-    const loadProductById = async ( productId: string ) => {
-
+    const loadProductById = async ( productId: string ) : Promise<Producto> => {
+        const response = await cafeApi.get<Producto>(`productos/${productId}`);
+        return response.data;
     };
 
     const uploadImage = async ( data: any, productId: string ) => {

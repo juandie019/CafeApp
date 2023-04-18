@@ -5,21 +5,22 @@ import { gstyles } from '../theme/globalStyles';
 interface Props {
     title: string,
     style ?: StyleProp<ViewStyle>
+    light: boolean,
     onPress: () => void;
 }
 
-export const MainButton = ({ title, style, onPress }: Props) => {
+export const MainButton = ({ title, style, light, onPress }: Props) => {
   return (
     <View style={{
       ...styles.buttonContainer,
       ...style as any,
     }}>
         <TouchableOpacity
-          activeOpacity={ 0.8 }
-          style={ styles.button }
+          activeOpacity={ 0.5 }
+          style={[styles.button, (light) && styles.buttonLight ]}
           onPress={ onPress }
         >
-          <Text style={ gstyles.buttonText }>{ title }</Text>
+          <Text style={[ gstyles.buttonText, (light) && styles.buttonTextLight ]}>{ title }</Text>
         </TouchableOpacity>
     </View>
   );
@@ -39,4 +40,11 @@ const styles = StyleSheet.create({
         borderRadius: 100,
     },
 
+    buttonLight: {
+      borderColor: 'black',
+    },
+
+    buttonTextLight: {
+      color: 'black',
+    },
 });
