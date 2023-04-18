@@ -5,8 +5,8 @@ import cafeApi from '../api/cafeApi';
 type ProductsContextProps = {
     products: Producto[];
     loadProducts: () => {};
-    addProduct: ( categoryId: string, productName: string) => Promise<void>;
-    updateProduct:( categoryId: string, productName: string, productId: string ) => Promise<void>;
+    addProduct: ( categoryId: string, productName: string) => Promise<Producto>;
+    updateProduct:( categoryId: string, productName: string, productId: string ) => Promise<Producto>;
     deleteProduct:( productId: string ) => Promise<void>;
     loadProductById:( productId: string ) => Promise<Producto>;
     uploadImage:( data: any, productId: string ) => Promise<void>; //TODO: cambiar ANY
@@ -27,13 +27,22 @@ export const ProductsProvider = ({ children }: any) => {
         setProducts(response.data.productos);
     };
 
-    const addProduct = async ( categoryId: string, productName: string) => {
-        console.log({ categoryId, productName });
+    const addProduct = async ( categoryId: string, productName: string) : Promise<Producto> => {
+        const resp = await cafeApi.post<Producto>('/productos', { nombre: productName, categoria: categoryId });
+        setProducts([...products, resp.data]);
+        return resp.data;
     };
 
-    const updateProduct = async ( categoryId: string, productName: string, productId: string ) => {
-        console.log({ categoryId, productName, productId });
+    const updateProduct = async ( categoryId: string, productName: string, productId: string ) : Promise<Producto> => {
+        console.log(productId);
+        const resp = await cafeApi.put<Producto>(`productos/${productId}`, { nombre: productName, categoria: categoryId });
 
+        setProducts(products.map( prod => {
+            return (prod._id === productId)
+                ? resp.data
+                : prod;
+        }));
+        return resp.data;
     };
 
     const deleteProduct = async ( productId: string ) => {

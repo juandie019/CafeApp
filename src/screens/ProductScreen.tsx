@@ -43,9 +43,9 @@ export const ProductScreen = ({ route, navigation }: Props) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: id ? nombre : 'Nuevo Producto',
+      title: _id ? nombre : 'Nuevo Producto',
     });
-  }, [nombre]);
+  }, [nombre, _id]);
 
   const loadProduct = async () => {
     if ( id.length === 0) { return; }
@@ -64,12 +64,13 @@ export const ProductScreen = ({ route, navigation }: Props) => {
     loadProduct();
   }, []);
 
-  const saveOrUpdate = () => {
-    if ( id.length > 0 ){
+  const saveOrUpdate = async () => {
+    if ( _id.length > 0 ){
       updateProduct(categoryId, nombre, _id);
     } else {
       const tempCategoriaId = categoryId || categories[0]._id;
-      addProduct(tempCategoriaId, nombre);
+      const newProduct = await addProduct(tempCategoriaId, nombre);
+      onChange(newProduct._id, '_id');
     }
   };
 
@@ -104,7 +105,7 @@ export const ProductScreen = ({ route, navigation }: Props) => {
         />
 
         {
-          ( id.length > 0 ) && (
+          ( _id.length > 0 ) && (
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <MainButton
               title="Camara"
