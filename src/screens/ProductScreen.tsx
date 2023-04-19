@@ -1,8 +1,9 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import  { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ProductsStackParams } from '../navigator/ProductsNavigator';
 import { Picker } from '@react-native-picker/picker';
+import { ImagePickerResponse, launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 import { ProductsContext } from '../context/ProductsContext';
 import { useCategories } from '../hooks/useCategories';
@@ -18,7 +19,8 @@ export const ProductScreen = ({ route, navigation }: Props) => {
   const { id = '', name = ''} = route.params;
 
   const { categories, isLoading } = useCategories();
-  const { loadProductById, addProduct, updateProduct } = useContext(ProductsContext);
+  const { loadProductById, addProduct, updateProduct, uploadImage } = useContext(ProductsContext);
+  const [tempImage, setTempImage] = useState<string>();
 
   const { _id, nombre, categoryId, img, onChange, setForm } = useForm({
     _id: id,
@@ -74,6 +76,26 @@ export const ProductScreen = ({ route, navigation }: Props) => {
     }
   };
 
+  const takePhoto = () => {
+    launchCamera( { mediaType: 'photo', quality: 0.5 } , ( response ) => {
+      setImage(response);
+    });
+  };
+
+  const openGallery = () => {
+    launchImageLibrary( {mediaType: 'photo', quality: 0.5}, (response) => {
+      setImage(response);
+    });
+  };
+
+  const setImage = ( response: ImagePickerResponse ) => {
+    if (response.didCancel) { return; }
+    if ( !response.assets ) { return; }
+
+    setTempImage(response.assets[0].uri);
+    uploadImage(response.assets[0], _id);
+  };
+
   return (
     <View style={ styles.container }>
       <ScrollView>
@@ -109,13 +131,13 @@ export const ProductScreen = ({ route, navigation }: Props) => {
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <MainButton
               title="Camara"
-              onPress={ ()=>console.log('click') }
+              onPress={ takePhoto }
               style={{ marginRight: 10}}
               light
             />
             <MainButton
               title="Galería"
-              onPress={ ()=>console.log('click') }
+              onPress={ openGallery }
               light
             />
           </View>
@@ -123,9 +145,21 @@ export const ProductScreen = ({ route, navigation }: Props) => {
         }
 
         {
-          ( img.length > 0 ) && (
+          ( img.length > 0 && !tempImage ) && (
             <Image
               source={{ uri: img }}
+              style={{
+                width: '100%',
+                height: 300,
+                marginTop: 20,
+              }}
+            />
+          )
+        }
+        {
+          ( tempImage ) && (
+            <Image
+              source={{ uri: tempImage }}
               style={{
                 width: '100%',
                 height: 300,
